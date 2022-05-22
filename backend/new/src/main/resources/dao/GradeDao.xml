@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.qjj.dao.GradeDao">
+
+    <select id="listG1" parameterType="string" resultType="string">
+        select distinct grade1
+        from products
+        where type = #{type}
+    </select>
+
+    <select id="listG2" parameterType="com.qjj.model.entity.Grade2" resultType="string">
+        select distinct grade2
+        from products
+        where grade1 = #{grade1}
+        and type = #{type}
+    </select>
+
+    <select id="listG3" parameterType="com.qjj.model.entity.Grade3" resultType="string">
+        select distinct grade3
+        from products
+        where grade1 = #{grade1}
+          and grade2 = #{grade2}
+          and type = #{type}
+    </select>
+
+</mapper>

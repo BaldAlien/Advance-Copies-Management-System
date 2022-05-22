@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.qjj.dao.InfoDao">
+
+    <select id="getInfoByID" parameterType="int" resultType="com.qjj.model.entity.UserInfoShow">
+        select user_info.user_id,user.username,email,consignee,phone_num,address,certify
+        from user_info,user
+        where user_info.user_id=#{user_id} and user.user_id=#{user_id}
+    </select>
+
+    <select id="getPointsByID" parameterType="int" resultType="int">
+        select points
+        from user_points
+        where user_id=#{user_id}
+    </select>
+
+    <update id="updateUserInfo" parameterType="com.qjj.model.entity.EditUserInfoByID">
+        update user_info
+        set
+            email = #{email},
+            consignee = #{consignee},
+            phone_num = #{phone_num},
+            address = #{address}
+        where user_id = #{user_id}
+    </update>
+
+    <select id="getUserPermission"  resultType="com.qjj.model.entity.UserPermission">
+        select user_id,username,if(permission!=(-1),"正常","封禁") as permission
+        from user
+        where permission!=0
+    </select>
+</mapper>

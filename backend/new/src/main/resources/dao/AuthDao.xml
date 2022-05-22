@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.qjj.dao.AuthDao">
+
+
+    <select id="findById" parameterType="String" resultType="String">
+        select password
+        from user
+        where username = #{username}
+    </select>
+
+    <select id="getPasswordAndSaltByUsername" parameterType="String" resultType="map">
+        select password,salt from user where username = #{username}
+    </select>
+
+
+    <select id="getPermissionByUsername" parameterType="String" resultType="int">
+        select permission from user where username = #{username}
+    </select>
+
+    <select id="findIdByName" parameterType="String" resultType="int">
+        select user_id from user where username = #{username};
+    </select>
+
+    <insert id="registerUser" parameterType="com.qjj.model.entity.User">
+         insert into user(username,password,permission,salt)
+        VALUE
+        (#{username}, #{password}, #{permission} , #{salt})
+    </insert>
+
+    <insert id="setUserInfo" parameterType="com.qjj.model.entity.UserInfo" keyProperty="user_id" useGeneratedKeys="true">
+         insert into user_info(user_id,email,consignee,phone_num,address,certify)
+        VALUE
+        (#{user_id},null,null,null,null,#{certify})
+    </insert>
+
+</mapper>

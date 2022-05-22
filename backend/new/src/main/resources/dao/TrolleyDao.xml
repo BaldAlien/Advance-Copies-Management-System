@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qjj.dao.TrolleyDao">
+
+    <select id="checkCart" parameterType="com.qjj.model.entity.Trolley" resultType="com.qjj.model.entity.Trolley">
+        select user_id, book_id, count
+        from trolley
+        where user_id = #{user_id}
+          and book_id = #{book_id}
+    </select>
+
+    <insert id="insertCart" parameterType="com.qjj.model.entity.Trolley">
+        <selectKey resultType="int" keyProperty="user_id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+
+        insert into trolley values(#{user_id},#{book_id},#{count})
+    </insert>
+
+    <delete id="purchase" parameterType="com.qjj.model.entity.Trolley">
+        delete
+        from trolley
+        where user_id = #{user_id}
+          and book_id = #{book_id}
+    </delete>
+
+
+    <update id="updateProduct" parameterType="com.qjj.model.entity.Trolley">
+        update trolley
+        set count = #{count}
+        where user_id = #{user_id}
+          and book_id = #{book_id}
+    </update>
+
+    <delete id="deleteProduct" parameterType="com.qjj.model.entity.Trolley">
+        delete
+        from trolley
+        where user_id = #{user_id}
+          and book_id = #{book_id}
+    </delete>
+
+    <delete id="deleteProductsByUserId" parameterType="int">
+        delete
+        from trolley
+        where user_id = #{user_id}
+    </delete>
+
+    <select id="entry" parameterType="int" resultType="com.qjj.model.entity.TrolleyShow">
+        select trolley.book_id ,
+               products.title ,
+               trolley.count ,
+               products.points,
+               products.imgsrc
+        from trolley,
+             products
+        where trolley.user_id = #{user_id}
+          and trolley.book_id = products.book_id
+    </select>
+
+    <select id="checkPoints" parameterType="int" resultType="int">
+        select points
+        from user_points
+        where user_id=#{user_id}
+    </select>
+
+
+</mapper>

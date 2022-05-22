@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.qjj.dao.HistoryDao">
+
+    <insert id="createHistory" parameterType="com.qjj.model.entity.History">
+        insert into history(user_id,book_id,title,count,points,transaction_time)
+        value (#{userId},#{bookId},#{title},#{count},#{points},#{transactionTime})
+    </insert>
+
+    <select id="getAllHistory" resultType="com.qjj.model.entity.HistoryShow">
+        select history_id,history.user_id,username,book_id,title,count,points,(count*points) as sum,transaction_time
+        from history,user
+        where history.user_id=user.user_id
+        order by history_id desc
+    </select>
+
+    <select id="getHistoryByID" parameterType="int" resultType="com.qjj.model.entity.HistoryShow">
+        select history_id,history.user_id,username,book_id,title,count,points,(count*points) as sum,transaction_time
+        from history,user
+        where history.user_id=#{user_id} and history.user_id=user.user_id
+        order by history_id desc
+    </select>
+</mapper>

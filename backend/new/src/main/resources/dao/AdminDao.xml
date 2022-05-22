@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.qjj.dao.AdminDao">
+
+    <update id="editProducts" parameterType="com.qjj.model.entity.EditProducts">
+        update products
+        set title=#{title},
+            author=#{author},
+            grade1=#{grade1},
+            grade2=#{grade2},
+            grade3=#{grade3},
+            type=#{type},
+            imgsrc=#{imgsrc},
+            isbn=#{isbn},
+            issn=#{issn},
+            publication_time=#{publicationTime},
+            word_count=#{wordCount},
+            format=#{format},
+            page_count=#{pageCount},
+            bookbinding=#{bookbinding},
+            language=#{language},
+            points=#{points}
+        where book_id=#{bookId}
+    </update>
+
+    <update id="deleteProduct" parameterType="int">
+        update products
+        set del_flag=1
+        where book_id=#{id}
+    </update>
+
+</mapper>

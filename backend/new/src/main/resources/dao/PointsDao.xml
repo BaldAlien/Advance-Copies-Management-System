@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qjj.dao.PointsDao">
+
+    <select id="checkPointsByID" resultType="int" >
+        select points
+        from user_points
+        where user_id = #{user_id}
+    </select>
+
+    <update id="updatePointsById" parameterType="com.qjj.model.entity.Points">
+        update user_points
+        set points = #{points}
+        where user_id = #{user_id}
+    </update>
+
+    <select id="checkUser" resultType="int" >
+        select user_id
+        from user_points
+        where user_id = #{user_id}
+    </select>
+
+    <insert id="initPoints" parameterType="int" >
+        insert into user_points
+        values (#{user_id},5)
+    </insert>
+</mapper>

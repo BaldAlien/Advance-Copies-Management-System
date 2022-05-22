@@ -1,0 +1,201 @@
+<template>
+  <div class="login-form">
+    <header class="login-title">
+      <!-- <div class="login-title-word">登录</div> -->
+      <div id="login-title"></div>
+    </header>
+    <article>
+      <el-form
+        status-icon
+        :model="LoginFormData"
+        :rules="rules"
+        label-position="top"
+        label-width="80px"
+        class="login-form-body"
+        ref="LoginFormData"
+      >
+        <el-form-item
+          v-for="item in LoginForm"
+          :key="item.title"
+          :label="item.title"
+          :prop="item.name"
+          :class="item.name"
+        >
+          <el-input
+            v-model="LoginFormData[item.name]"
+            :maxlength="item.meta.max"
+            :type="item.meta.type ? item.meta.type : ''"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <div class="retrieve-wapper">
+        <span class="retrieve-password" @click="changeEvent('alter')"
+          >忘记密码？
+        </span>
+      </div>
+      <div class="auth-button">
+        <el-button type="primary" @click="login('LoginFormData')"
+          >登录</el-button
+        >
+        <el-button type="warning" @click="changeEvent('regist')"
+          >注册</el-button
+        >
+      </div>
+    </article>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { ref } from "vue";
+
+const radio1 = ref("1");
+</script>
+
+
+<script  lang="ts">
+import store from "../../store";
+import { _login } from "../../api/auth/auth";
+import { ElMessage } from "element-plus";
+export default {
+  name: "LoginForm",
+  data() {
+    let validatorName = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("请输入用户名"));
+      }
+      callback();
+    };
+    let validatorPass = (rule, value, callback) => {
+      if (value === "") {
+        return callback(new Error("请输入密码"));
+      }
+      callback();
+    };
+    return {
+      LoginFormData: {
+        username: "",
+        password: "",
+      },
+      LoginForm: [
+        {
+          title: "用户名",
+          name: "username",
+          value: "",
+          meta: {
+            max: 15,
+          },
+        },
+        {
+          title: "密码",
+          name: "password",
+          value: "",
+          meta: {
+            max: 30,
+            type: "password",
+          },
+        },
+      ],
+      rules: {
+        username: [
+          {
+            validator: validatorName,
+            trigger: "blur",
+          },
+        ],
+        password: [
+          {
+            validator: validatorPass,
+            trigger: "blur",
+          },
+        ],
+      },
+      ready: false,
+    };
+  },
+  methods: {
+    login(LoginFormData) {
+      this.$refs[LoginFormData].validate((valid) => {
+        if (valid) {
+          console.log(this.LoginFormData);
+          _login(this.LoginFormData).then((res) => {
+            if (res.data.token && res.code === 0) {
+              localStorage.setItem("token", res.data.token);
+              console.log(res.data.token);
+              console.log("save token!");
+              ElMessage.success({
+                message: "登陆成功！",
+                offset: 60,
+                type: "success",
+              });
+              this.$router.push(this.$route.query.return);
+            } else {
+              ElMessage.error("登录失败！");
+            }
+          });
+        } else {
+          ElMessage.error("登录失败！");
+        }
+      });
+    },
+    changeEvent(newEvent) {
+      if (newEvent === "alter") {
+        return;
+      }
+      store.commit("setEvent", newEvent);
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.login-form {
+  .login-title {
+    display: flex;
+    .title {
+      width: 33%;
+    }
+  }
+  article {
+    padding-top: 30px;
+    box-sizing: border-box;
+    .login-form-body {
+      .username,
+      .password {
+        box-sizing: border-box;
+        width: 100%;
+      }
+    }
+    .retrieve-wapper {
+      font-size: 14px;
+      color: rgba($color: gray, $alpha: 0.7);
+      padding-top: 10px;
+      padding-bottom: 10px;
+      .retrieve-password {
+        color: #426ab3;
+      }
+      .retrieve-password:hover {
+        color: #393b63;
+        cursor: pointer;
+      }
+    }
+    .login-ready {
+      span {
+        color: #426ab3;
+      }
+      span:hover {
+        color: #6a6da9;
+        cursor: pointer;
+      }
+    }
+    .auth-button {
+      text-align: right;
+      display: flex;
+      padding-top: 10px;
+      box-sizing: border-box;
+      button {
+        width: 100%;
+      }
+    }
+  }
+}
+</style>
